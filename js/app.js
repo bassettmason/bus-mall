@@ -83,10 +83,10 @@ function handleClick(event){
     return alert('Please Pick a Pic');
     }
     // console.log(totalClicks)
-    if (totalClicks > 24) {
+    if (totalClicks > 5) {
         container.removeEventListener('click', handleClick);
         container.style.display = 'none';
-        
+        showList();
     }
     totalClicks += 1;
     for (var i = 0; i < pictureArray.length; i++) {
@@ -97,6 +97,20 @@ function handleClick(event){
       }
     }
     getSixPic();
+}
+
+function showList() {
+    for (var i = 0; i < pictureArray.length; i++) {
+      var liEl = document.createElement('li');
+      var conversion = (pictureArray[i].clicks / pictureArray[i].timesShown * 100).toFixed(1);
+      if (pictureArray[i].timesShown === 0){
+          conversion = 0
+      }
+      liEl.textContent = pictureArray[i].displayName + ' has ' + pictureArray[i].clicks + ' clicks in ' + pictureArray[i].timesShown + ' times shown for a click-through conversion rate of ' + conversion + '%';
+  
+  
+      productList.appendChild(liEl);
+    }
 }
 
 getSixPic();

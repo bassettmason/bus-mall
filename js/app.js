@@ -5,6 +5,9 @@
 var pictureArray = [];
 var sixPic = [];
 var totalClicks = 0;
+var nameList = [];
+var clicksList = [];
+var ctx = document.getElementById('product-chart')
 
 // domstuff
 var container = document.getElementById('container');
@@ -83,10 +86,12 @@ function handleClick(event){
     return alert('Please Pick a Pic');
     }
     // console.log(totalClicks)
-    if (totalClicks > 5) {
+    if (totalClicks > 24) {
         container.removeEventListener('click', handleClick);
         container.style.display = 'none';
         showList();
+        getNameList();
+        chart();
     }
     totalClicks += 1;
     for (var i = 0; i < pictureArray.length; i++) {
@@ -112,10 +117,48 @@ function showList() {
       productList.appendChild(liEl);
     }
 }
+function getNameList () {
+    for (var i = 0; i < pictureArray.length; i++){
+        var name = pictureArray[i].displayName
+        nameList.push(name);
+        var clickstot = pictureArray[i].clicks
+        clicksList.push(clickstot);
+    }
+getSixPic();
+}
+function chart(){
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: nameList,
+        datasets: [{
+            label: '# of Clicks',
+            data: clicksList,
+            backgroundColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
+            ],
+            borderColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
+            ],
+            borderWidth: 1,
+            barPercentage: .5,
+            categoryPercentage: .5,
+            hoverBackgroundColor: '#FFFFFF'
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
 
+}
 getSixPic();
 
-console.table(pictureArray)
+// console.table(pictureArray)
 container.addEventListener('click', handleClick);
 
 

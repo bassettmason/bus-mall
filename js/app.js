@@ -7,7 +7,21 @@ var sixPic = [];
 var totalClicks = 0;
 var nameList = [];
 var clicksList = [];
+var newClicksList = []
 var ctx = document.getElementById('product-chart')
+var toLocal = [];
+var fromLocal = [];
+
+var getNewClicksList = function(){
+    
+    for (var i = 0; i < pictureArray.length; i++) {
+        var popNumb = 0
+        var newNumb = clicksList[i] + fromLocal[i];
+        newClicksList.pop();
+        newClicksList.push(newNumb);
+    
+    }
+}
 
 // domstuff
 var container = document.getElementById('container');
@@ -91,14 +105,19 @@ function handleClick(event){
         container.style.display = 'none';
         showList();
         getNameList();
+        
         chart();
+        store();
+        // getLocal();
+        
+
     }
     totalClicks += 1;
     for (var i = 0; i < pictureArray.length; i++) {
       if (event.target.alt === pictureArray[i].displayName) {
         pictureArray[i].clicks += 1;
-        console.log(event.target);
-        console.log(pictureArray[i].clicks + ' clicks.')
+        // console.log(event.target);
+        // console.log(pictureArray[i].clicks + ' clicks.')
       }
     }
     getSixPic();
@@ -126,14 +145,46 @@ function getNameList () {
     }
 getSixPic();
 }
-function chart(){
+
+// Local storage functions
+var store = function(){
+    console.log('newClicksList from store' +newClicksList)
+    if(newClicksList.length > 0){
+        localStorage.setItem('clicksLocal', JSON.stringify(newClicksList));
+        console.log('sent new click list')
+   } else {
+    
+        localStorage.setItem('clicksLocal', JSON.stringify(clicksList));
+        console.log('sent old click list')
+    }
+    console.log('localStorage' +localStorage)
+}
+var getLocal = function(){
+    // fromLocal = [];
+    fromLocal = localStorage.getItem('clicksLocal')
+    if(fromLocal){
+        fromLocal = JSON.parse(fromLocal)
+        getNewClicksList();
+    }
+    console.log('fromlocal' + fromLocal)
+}
+
+var chart = function(){
+    console.log('newclickslist' + newClicksList)
+    var insertData = [];
+    if(newClicksList > 0){
+        var insertData = newClicksList
+    } else {
+        var insertData = clicksList
+    }
+    console.log('insertData' + insertData);
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: nameList,
         datasets: [{
             label: '# of Clicks',
-            data: clicksList,
+            data: insertData,
             backgroundColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
             ],
             borderColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
@@ -156,6 +207,7 @@ var myChart = new Chart(ctx, {
 });
 
 }
+getLocal();
 getSixPic();
 
 // console.table(pictureArray)

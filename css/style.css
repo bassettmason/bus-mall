@@ -2,3 +2,6 @@
 img {
     width: 32%;
    }
+* {
+    outline: dotted orange;
+}

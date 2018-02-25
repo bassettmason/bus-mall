@@ -7,7 +7,13 @@ var sixPic = [];
 var totalClicks = 0;
 var nameList = [];
 var clicksList = [];
+var newClicksList = []
 var ctx = document.getElementById('product-chart')
+var toLocal = [];
+var fromLocal = [];
+var inputData = [];
+
+
 
 // domstuff
 var container = document.getElementById('container');
@@ -53,6 +59,7 @@ new picture('wine-glass', 'img/wine-glass.jpg')
 
 
 //functions
+
 function getRandomInt() {
     return Math.floor(Math.random() * pictureArray.length);
 
@@ -60,9 +67,10 @@ function getRandomInt() {
 
 function getSixPic(){           
 
-    while(sixPic.length < 6) {
+    while(sixPic.length < 7) {
         var rand = getRandomInt();
-        
+        console.log(rand)
+        console.log(sixPic)
         while(!sixPic.includes(rand)) {
             sixPic.push(rand);
         }
@@ -75,6 +83,7 @@ function getSixPic(){
         pics[i].alt = pictureArray[temp].displayName;
         
         pictureArray[temp].timesShown += 1;
+
     }
           
 }
@@ -89,18 +98,28 @@ function handleClick(event){
     if (totalClicks > 24) {
         container.removeEventListener('click', handleClick);
         container.style.display = 'none';
-        showList();
+        // showList();
         getNameList();
-        chart();
+        store();
+        makeChart();
+        
+        
+
     }
     totalClicks += 1;
     for (var i = 0; i < pictureArray.length; i++) {
-      if (event.target.alt === pictureArray[i].displayName) {
-        pictureArray[i].clicks += 1;
-        console.log(event.target);
-        console.log(pictureArray[i].clicks + ' clicks.')
-      }
+        if (event.target.alt === pictureArray[i].displayName) {
+            pictureArray[i].clicks += 1;
+
+            if(fromLocal.length != 0){
+                fromLocal[i] += 1;
+            }
+        }
+
     }
+        
+
+      
     getSixPic();
 }
 
@@ -123,39 +142,76 @@ function getNameList () {
         nameList.push(name);
         var clickstot = pictureArray[i].clicks
         clicksList.push(clickstot);
+        newClicksList.push(clickstot);
     }
-getSixPic();
+    // getSixPic();
 }
-function chart(){
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: nameList,
-        datasets: [{
-            label: '# of Clicks',
-            data: clicksList,
-            backgroundColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
-            ],
-            borderColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
-            ],
-            borderWidth: 1,
-            barPercentage: .5,
-            categoryPercentage: .5,
-            hoverBackgroundColor: '#FFFFFF'
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
+
+// Local storage functions
+var store = function(){
+    if(fromLocal.length === 0){
+        localStorage.setItem('clicksLocal', JSON.stringify(clicksList));
+        console.log('storing clickslist')
     }
-});
+    else{
+        localStorage.setItem('clicksLocal', JSON.stringify(fromLocal));
+        console.log('storing clicklist + from Local')
+    }
+    
+}
+var getLocal = function(){
+
+    if (localStorage.length > 0){
+    var local = [];   
+    local = localStorage.getItem('clicksLocal')
+    
+    fromLocal = JSON.parse(local)
+        
+    }
+    
+}
+
+
+var makeChart = function(){
+
+    if (fromLocal.length === 0){
+
+        inputData= clicksList;
+        console.log("clicks list = inputdata" + inputData);
+    }else {
+        inputData = fromLocal;
+        console.log("fromLocal = inputdata" + inputData);
+    }
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: nameList,
+            datasets: [{
+                label: '# of Clicks',
+                data: inputData,
+                backgroundColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
+                ],
+                borderColor: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'
+                ],
+                borderWidth: 1,
+                barPercentage: .5,
+                categoryPercentage: .5,
+                hoverBackgroundColor: '#FFFFFF'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
 
 }
+getLocal();
 getSixPic();
 
 // console.table(pictureArray)

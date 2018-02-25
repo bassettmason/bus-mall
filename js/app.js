@@ -60,11 +60,12 @@ new picture('wine-glass', 'img/wine-glass.jpg')
 
 //functions
 
+//random number genrator
 function getRandomInt() {
     return Math.floor(Math.random() * pictureArray.length);
 
 }
-
+//picking 6 pics non dup pushing 3 to sixPic      plus adding 1 for times shown
 function getSixPic(){           
 
     while(sixPic.length < 7) {
@@ -88,7 +89,7 @@ function getSixPic(){
           
 }
 
-//click event
+//click event handle when 25 clicks happens data stored local and chart is made
 
 function handleClick(event){
     if (event.target === container) {
@@ -103,9 +104,8 @@ function handleClick(event){
         store();
         makeChart();
         
-        
-
     }
+    //total clicks added plus individual clicks added to fromlocal array
     totalClicks += 1;
     for (var i = 0; i < pictureArray.length; i++) {
         if (event.target.alt === pictureArray[i].displayName) {
@@ -117,12 +117,10 @@ function handleClick(event){
         }
 
     }
-        
-
-      
     getSixPic();
 }
-
+        
+//List not activated chart is better
 function showList() {
     for (var i = 0; i < pictureArray.length; i++) {
       var liEl = document.createElement('li');
@@ -136,15 +134,16 @@ function showList() {
       productList.appendChild(liEl);
     }
 }
+//getting name list for chart
 function getNameList () {
     for (var i = 0; i < pictureArray.length; i++){
         var name = pictureArray[i].displayName
         nameList.push(name);
-        var clickstot = pictureArray[i].clicks
-        clicksList.push(clickstot);
-        newClicksList.push(clickstot);
+        var clicksTot = pictureArray[i].clicks
+        clicksList.push(clicksTot);
+        newClicksList.push(clicksTot);
     }
-    // getSixPic();
+
 }
 
 // Local storage functions
@@ -159,6 +158,7 @@ var store = function(){
     }
     
 }
+//grabbing local storage data
 var getLocal = function(){
 
     if (localStorage.length > 0){
@@ -171,7 +171,7 @@ var getLocal = function(){
     
 }
 
-
+//chart
 var makeChart = function(){
 
     if (fromLocal.length === 0){
@@ -211,10 +211,12 @@ var makeChart = function(){
     });
 
 }
+//checking and grabbing for local storage
 getLocal();
+//starts getsixpic and shows three pics
 getSixPic();
 
-// console.table(pictureArray)
+//adds event listener
 container.addEventListener('click', handleClick);
 
 
